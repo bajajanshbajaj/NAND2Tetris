@@ -1,4 +1,5 @@
 NAND2Tetris Project 2: Boolean Arithmetic
+
 This repository contains the solution for Project 2: Boolean Arithmetic from the NAND2Tetris course. The project focuses on building the essential arithmetic components required for constructing the ALU (Arithmetic-Logic Unit) of the Hack computer. By completing this project, you will gradually build the chips that handle arithmetic operations, culminating in the ALU.
 
 Project Overview
