@@ -10,3 +10,4 @@ FullAdder: A more advanced adder that includes carry-in, adding three 1-bit numb
 Add16: A 16-bit adder for adding two 16-bit numbers.
 Inc16: A chip that increments a 16-bit number by 1.
 ALU: A chip that performs various arithmetic and logical operations using the previously built components.
+![Screenshot (35)](https://github.com/user-attachments/assets/09c3da16-8eb7-4e8c-b6bb-256b0d95c684)
