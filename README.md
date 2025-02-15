@@ -1,2 +1,3 @@
 nand2tetris
+
 This repository contains my solutions to the Nand to Tetris course, where we build a computer from the ground up, starting with basic logic gates and ending with writing programs in a high-level language (Jack). The course spans 12 chapters, each guiding you through the process of constructing key components of a computer system, including the ALU, CPU, memory, and a simple operating system.
