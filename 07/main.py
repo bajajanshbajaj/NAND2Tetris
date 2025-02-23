@@ -4,7 +4,6 @@ from parser import parse
 from codewriter import *
 from classes import *
 
-
 ini = initialise()
 instruction= ''
 instruction+= ini.start()
