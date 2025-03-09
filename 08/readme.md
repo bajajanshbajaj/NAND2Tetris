@@ -5,3 +5,10 @@ This repository contains Project 8 of the Nand2Tetris course, which focuses on i
 To improve the user experience, I have implemented a graphical user interface (GUI) using Tkinter. This interface allows users to easily select a .vm file, and the program automatically generates the corresponding .asm file. The GUI offers a more intuitive and user-friendly way to interact with the converter compared to a traditional command-line interface.
 
 The program translates each VM instruction into its Hack assembly equivalent, providing a bridge between higher-level VM code and the lower-level assembly language used by the Hack computer. This project is a key step in understanding the compilation process, as it demonstrates how high-level operations are broken down into assembly instructions.
+
+
+![Screenshot 2025-03-10 003520](https://github.com/user-attachments/assets/51968567-8116-4266-94a0-5bee9668222a)
+
+
+https://github.com/user-attachments/assets/3c14e95d-9b69-401f-b4ef-f4758b870025
+
