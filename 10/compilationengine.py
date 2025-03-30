@@ -1,9 +1,12 @@
 from tokeniser import tokeniser
+import logging 
+
+
 
 #token is advanced to next token before calling another function , this gives tokens access to both current class and the next class
 class CompileEngine():
     
-    def __init__(self,  filestream):
+    def __init__(self,  filestream, logfile):
         self.parsed = ''
         self.tok = tokeniser(filestream)
         #self.tok.printokenwtype()
@@ -13,6 +16,12 @@ class CompileEngine():
         self.opList = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
         self.unaryOpList = ['-', '~']
         self.keywordConstantList = ['true', 'false', 'null', 'this'] 
+        logging.basicConfig(
+    filename=logfile,  # Log file name
+    level=logging.DEBUG,  # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Log format
+    datefmt='%Y-%m-%d %H:%M:%S'  # Date format
+)
         self.compileClass()
 
         
@@ -23,32 +32,41 @@ class CompileEngine():
         self.parsed+= f"</{name}>\n"
     def appendCurrentTokenAsTerminal(self):
         name = self.tok.current_token()
-        self.parsed+= f"<{self.tok.tokentype(name)}> {self.tok.escape_xml(name)} </{self.tok.tokentype(name)}>\n"
+        self.parsed+= f"<{self.tok.tokentypecurrent()}> {self.tok.escape_xml(name)} </{self.tok.tokentypecurrent()}>\n"
 
     def compileClass(self):
-        print('compileClass')
+        logging.debug('compileClass') 
         self.appendnonterminalstart("class")
-        self.appendCurrentTokenAsTerminal()
-        self.tok.advance()
-        self.appendCurrentTokenAsTerminal()
-        self.tok.advance()
-        self.appendCurrentTokenAsTerminal()
-        self.tok.advance()
 
-        if self.tok.current_token() in self.classvarsList:
-            self.compileClassVarDec()
-        else:  #elif self.tok.current_token() in self.subroutineDecList:
-            self.compileSubroutine()
-        
-        if self.tok.current_token() == '}':
+        if self.tok.tokentypecurrent() == 'keyword':
             self.appendCurrentTokenAsTerminal()
+            self.tok.advance()
+            if self.tok.tokentypecurrent() =='identifier':
+                self.appendCurrentTokenAsTerminal()
+                self.tok.advance()
+                if self.tok.current_token() == '{':
+                    self.appendCurrentTokenAsTerminal()
+                    self.tok.advance()
+                else:self.tok.errorhandler()
+            else:self.tok.errorhandler()
+        else:self.tok.errorhandler()
+
+        while True:
+            if self.tok.current_token() in self.classvarsList:
+                self.compileClassVarDec()
+            elif self.tok.current_token() in self.subroutineDecList:
+                self.compileSubroutine()
+            elif self.tok.current_token() == '}':
+                self.appendCurrentTokenAsTerminal()
+                break
+            else:self.tok.errorhandler()
 
         self.appendnonterminalend("class")
 
         pass
 
     def compileClassVarDec(self):
-        print('compileClassVarDec')
+        logging.debug('compileClassVarDec')
 
         self.appendnonterminalstart("classVarDec")
         self.appendCurrentTokenAsTerminal()
@@ -61,65 +79,64 @@ class CompileEngine():
         self.appendnonterminalend("classVarDec")
 
         self.tok.advance()
-
-        if self.tok.current_token() in self.classvarsList:
-            self.compileClassVarDec()
-        else:  #elif self.tok.current_token() in self.subroutineDecList:
-            self.compileSubroutine()
-
         pass
 
     def compileSubroutine(self):
-        print("compileSubroutine")
+        logging.debug("compileSubroutine")
         self.appendnonterminalstart("subroutineDec")
-        self.appendCurrentTokenAsTerminal()
-        self.tok.advance()
-        if True: # self.tok.current_token() in self.subroutineDecList or self.tok.current_token() == 'void':
+        # self.appendCurrentTokenAsTerminal()
+        # self.tok.advance()
+        if self.tok.current_token() in self.subroutineDecList :
             self.appendCurrentTokenAsTerminal()
-            if self.tok.tokentype(self.tok.advance()) == 'identifier':
+            self.tok.advance()
+            if True:# self.tok.current_token() == 'void' or self.tok.tokentypecurrent() == ?
                 self.appendCurrentTokenAsTerminal()
-                if self.tok.advance() == '(':
+                # self.tok.advance()
+                if self.tok.tokentype(self.tok.advance()) == 'identifier':
+
                     self.appendCurrentTokenAsTerminal()
-                    self.tok.advance()
-                    self.compileParameterList()
-                    print('current token = "'+(self.tok.current_token())+'"')
-                    if self.tok.current_token()== ")":
+                    if self.tok.advance() == '(':
                         self.appendCurrentTokenAsTerminal()
                         self.tok.advance()
-                        self.compileSubroutineBody()
-                    else : print('expected ) ' )
+                        self.compileParameterList()
+                        logging.debug('current token = "'+(self.tok.current_token())+'"')
+                        if self.tok.current_token()== ")":
+                            self.appendCurrentTokenAsTerminal()
+                            self.tok.advance()
+                            self.compileSubroutineBody()
+                        else:self.tok.errorhandler()
+                    else:self.tok.errorhandler()
+                else:self.tok.errorhandler()
+
   
         self.appendnonterminalend("subroutineDec")
-
-        if self.tok.current_token() != '}':
-            self.compileSubroutine()
-
         
         pass
 
     def compileParameterList(self):
-        print('compileparameterlist')
+        logging.debug('compileparameterlist')
         self.appendnonterminalstart("parameterList")
         if self.tok.current_token() != ')':
             while True:
-                print(self.tok.current_token())
+                logging.debug(self.tok.current_token())
                 if True: #self.tok.current_token() in self.typeList:
                     self.appendCurrentTokenAsTerminal()
                     self.tok.advance()
-                    if self.tok.tokentype(self.tok.current_token()) == "identifier":
-                        print(self.tok.current_token())
+                    if self.tok.tokentypecurrent() == "identifier":
+                        logging.debug(self.tok.current_token())
                         self.appendCurrentTokenAsTerminal()
                         self.tok.advance()
+                    else:self.tok.errorhandler()
                 if self.tok.current_token() == ',':
-                    print(self.tok.current_token())
+                    logging.debug(self.tok.current_token())
                     self.appendCurrentTokenAsTerminal()
                     self.tok.advance()
                 else:
-                    print('exiting')
-                    print(self.tok.current_token())
+                    logging.debug('exiting')
+                    logging.debug(self.tok.current_token())
                     break
         else : 
-            print('empty param list')
+            logging.debug('empty param list')
 
             
 
@@ -127,28 +144,31 @@ class CompileEngine():
         pass
 
     def compileSubroutineBody(self):
-        print('compilesubroutinebody')
+        logging.debug('compilesubroutinebody')
         self.appendnonterminalstart("subroutineBody")
         if self.tok.current_token() == '{':
             self.appendCurrentTokenAsTerminal()
             self.tok.advance()
-        
-            if self.tok.current_token()== 'var':
-                self.compileVarDec()
+
+            while True:
+                if self.tok.current_token()== 'var':
+                    self.compileVarDec()
+                else:break
 
             self.compileStatements()
 
             if self.tok.current_token() == '}':
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
+            else:self.tok.errorhandler()
 
-        else : print('expected { ')
+        else:self.tok.errorhandler()
         
         self.appendnonterminalend("subroutineBody")
         pass
 
     def compileVarDec(self):
-        print('compilevardec')
+        logging.debug('compilevardec')
 
         self.appendnonterminalstart("varDec")
         self.appendCurrentTokenAsTerminal()
@@ -162,14 +182,11 @@ class CompileEngine():
 
         self.appendnonterminalend("varDec")
 
-        if self.tok.current_token() == 'var':
-            self.compileVarDec()
-
         
         pass
 
     def compileStatements(self):
-        print("compileStatements")
+        logging.debug("compileStatements")
         self.appendnonterminalstart("statements")
         while True:
             if self.tok.current_token() == 'let':
@@ -189,11 +206,11 @@ class CompileEngine():
         pass
 
     def compileLet(self):
-        print('let')
+        logging.debug('let')
         self.appendnonterminalstart("letStatement")
         self.appendCurrentTokenAsTerminal()
         self.tok.advance()
-        if self.tok.tokentype(self.tok.current_token() ) == "identifier":
+        if self.tok.tokentypecurrent() == "identifier":
             self.appendCurrentTokenAsTerminal()
             self.tok.advance()
             if self.tok.current_token() == '[':
@@ -203,6 +220,7 @@ class CompileEngine():
                 if self.tok.current_token() == ']':
                     self.appendCurrentTokenAsTerminal()
                     self.tok.advance()
+                else:self.tok.errorhandler()
             if self.tok.current_token() == '=':
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
@@ -211,12 +229,14 @@ class CompileEngine():
                 if self.tok.current_token() == ';':
                     self.appendCurrentTokenAsTerminal()
                     self.tok.advance()
+                else:self.tok.errorhandler()
+            else:self.tok.errorhandler()
 
         self.appendnonterminalend("letStatement")
         pass
 
     def compileIf(self):
-        print('if')
+        logging.debug('if')
         self.appendnonterminalstart("ifStatement")
 
         self.appendCurrentTokenAsTerminal()
@@ -245,6 +265,13 @@ class CompileEngine():
                                 if self.tok.current_token() == '}':
                                     self.appendCurrentTokenAsTerminal()
                                     self.tok.advance()
+                                else:self.tok.errorhandler()
+                            else:self.tok.errorhandler()
+                        
+                    else:self.tok.errorhandler()
+                else:self.tok.errorhandler()
+            else:self.tok.errorhandler()
+        else:self.tok.errorhandler()
 
 
 
@@ -252,7 +279,7 @@ class CompileEngine():
         pass
 
     def compileWhile(self):
-        print('while')
+        logging.debug('while')
         self.appendnonterminalstart("whileStatement")
         self.appendCurrentTokenAsTerminal()
         self.tok.advance()
@@ -270,27 +297,33 @@ class CompileEngine():
                     if self.tok.current_token() == '}':
                         self.appendCurrentTokenAsTerminal()
                         self.tok.advance()
+                    else:self.tok.errorhandler()
+                else:self.tok.errorhandler()
+            else:self.tok.errorhandler()
+        else:self.tok.errorhandler()
 
 
         self.appendnonterminalend("whileStatement")
         pass
 
     def compileDo(self):
-        print('do')
+        logging.debug('do')
         self.appendnonterminalstart("doStatement")
         self.appendCurrentTokenAsTerminal()
         self.tok.advance()
-        if self.tok.tokentype(self.tok.current_token()) == "identifier":
+        if self.tok.tokentypecurrent() == "identifier":
             self.subroutineCall()
             if self.tok.current_token() == ';':
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
+            else:self.tok.errorhandler()
+        else:self.tok.errorhandler()
 
         self.appendnonterminalend("doStatement")
         pass
 
     def compileReturn(self):
-        print('return')
+        logging.debug('return')
         self.appendnonterminalstart("returnStatement")
         self.appendCurrentTokenAsTerminal()
         self.tok.advance()
@@ -300,13 +333,14 @@ class CompileEngine():
         if self.tok.current_token() == ';':
             self.appendCurrentTokenAsTerminal()
             self.tok.advance()
+        else:self.tok.errorhandler()
 
         self.appendnonterminalend("returnStatement")
         pass
 
     def compileExpression(self):
         self.appendnonterminalstart('expression')
-        print("compileExpression")
+        logging.debug("compileExpression")
         
         self.compileTerm()
         while True:
@@ -323,7 +357,7 @@ class CompileEngine():
         pass
 
     def compileTerm(self):
-        print("compileterm")
+        logging.debug("compileterm")
         self.appendnonterminalstart("term")
         if self.tok.current_token() in self.unaryOpList:
             self.appendCurrentTokenAsTerminal()
@@ -336,7 +370,8 @@ class CompileEngine():
             if self.tok.current_token()==')':
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
-        elif self.tok.tokentype(self.tok.current_token()) == "identifier" and self.tok.next_token() == '[':
+            else:self.tok.errorhandler()
+        elif self.tok.tokentypecurrent() == "identifier" and self.tok.next_token() == '[':
             self.appendCurrentTokenAsTerminal()
             self.tok.advance()
             self.appendCurrentTokenAsTerminal()
@@ -345,9 +380,10 @@ class CompileEngine():
             if self.tok.current_token()==']':
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
-        elif self.tok.tokentype(self.tok.current_token()) == "identifier" and (self.tok.next_token() == '(' or self.tok.next_token() == '.'):
+            else:self.tok.errorhandler()
+        elif self.tok.tokentypecurrent() == "identifier" and (self.tok.next_token() == '(' or self.tok.next_token() == '.'):
             self.subroutineCall()
-        elif self.tok.tokentype(self.tok.current_token()) != "symbol":
+        elif self.tok.tokentypecurrent() != "symbol":
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
 
@@ -355,7 +391,7 @@ class CompileEngine():
         pass
 
     def compileExpressionList(self):
-        print("compileExpressionList")
+        logging.debug("compileExpressionList")
         self.appendnonterminalstart("expressionList")
         if self.tok.current_token() != ')':
             while True:
@@ -364,22 +400,22 @@ class CompileEngine():
                     self.appendCurrentTokenAsTerminal()
                     self.tok.advance()
                 else:
-                    print('exitingEXPLIST')
+                    logging.debug('exitingEXPLIST')
                     break
         else : 
-            print('empty exp list')
+            logging.debug('empty exp list')
         self.appendnonterminalend("expressionList")
         pass
 
     def subroutineCall(self):
-        print("subroutineCall")
-        if self.tok.tokentype(self.tok.current_token()) == "identifier":
+        logging.debug("subroutineCall")
+        if self.tok.tokentypecurrent() == "identifier":
             self.appendCurrentTokenAsTerminal()
             self.tok.advance()
             if self.tok.current_token()== '.':
                 self.appendCurrentTokenAsTerminal()
                 self.tok.advance()
-                if self.tok.tokentype(self.tok.current_token()) == "identifier":
+                if self.tok.tokentypecurrent() == "identifier":
                     self.appendCurrentTokenAsTerminal()
                     self.tok.advance()
                     if self.tok.current_token() == "(":
@@ -389,6 +425,9 @@ class CompileEngine():
                         if self.tok.current_token() == ')':
                             self.appendCurrentTokenAsTerminal()
                             self.tok.advance()
+                        else:self.tok.errorhandler()
+                    else:self.tok.errorhandler()
+                else:self.tok.errorhandler()
             elif self.tok.current_token() == "(":
                         self.appendCurrentTokenAsTerminal()
                         self.tok.advance()
@@ -396,6 +435,7 @@ class CompileEngine():
                         if self.tok.current_token() == ')':
                             self.appendCurrentTokenAsTerminal()
                             self.tok.advance()  
+                        else:self.tok.errorhandler()
         pass
 
 
