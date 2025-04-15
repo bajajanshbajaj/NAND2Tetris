@@ -1,0 +1,18 @@
+2025-04-14 16:17:22 - root - DEBUG - compileClass
+2025-04-14 16:17:22 - root - DEBUG - compileSubroutine
+2025-04-14 16:17:22 - root - DEBUG - current token = ")"
+2025-04-14 16:17:22 - root - DEBUG - compileparameterlist
+2025-04-14 16:17:22 - root - DEBUG - empty param list
+2025-04-14 16:17:22 - root - DEBUG - compilesubroutinebody
+2025-04-14 16:17:22 - root - DEBUG - compileStatements
+2025-04-14 16:17:22 - root - DEBUG - do
+2025-04-14 16:17:22 - root - DEBUG - subroutineCall
+2025-04-14 16:17:22 - root - DEBUG - compileExpressionList
+2025-04-14 16:17:22 - root - DEBUG - compileExpression
+2025-04-14 16:17:22 - root - DEBUG - compileterm
+2025-04-14 16:17:22 - root - DEBUG - compileterm
+2025-04-14 16:17:22 - root - DEBUG - compileExpression
+2025-04-14 16:17:22 - root - DEBUG - compileterm
+2025-04-14 16:17:22 - root - DEBUG - compileterm
+2025-04-14 16:17:22 - root - DEBUG - exitingEXPLIST
+2025-04-14 16:17:22 - root - DEBUG - return

@@ -1,4 +1,3 @@
-import re
 import sys
 class tokeniser():
 
@@ -24,7 +23,8 @@ class tokeniser():
         elif token[0].isalpha() or token[0] == '_':
             return "identifier"
         else:
-            print('ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR')
+            print('ERR')
+       
     
     def token_list_append(self, token):
         self.current_line_token_number +=1 
@@ -53,69 +53,69 @@ class tokeniser():
         self.token_list = []
         self.current_token_number=0
 
-        try:
-            while True:
-                if content[content_index] == '\n' :
-                    self.line_number += 1 
-                    self.current_line_token_number = 0 
+        while content_index < len(content):
+            if content[content_index] == '\n' :
+                self.line_number += 1 
+                self.current_line_token_number = 0 
 
-                if content[content_index] + content[content_index +1 ] == '/*':
-                    while (content[content_index] + content[content_index +1 ]) != '*/':
-                        if content[content_index] == '\n' :
-                            self.line_number += 1 
-                            self.current_line_token_number = 0 
+            if content_index + 1 < len(content) and content[content_index] + content[content_index + 1] == '/*':
+                while content_index + 1 < len(content) and content[content_index] + content[content_index + 1] != '*/':
 
-                        
-                        content_index+=1
-                    content_index+=2
+                    if content[content_index] == '\n' :
+                        self.line_number += 1 
+                        self.current_line_token_number = 0 
 
-                elif content[content_index] + content[content_index +1 ] == '//':
-                    while content[content_index]  != '\n':
-                        content_index+=1
-                    content_index+=1
-                    self.line_number += 1 
-                    self.current_line_token_number = 0 
-            
-                elif content[content_index] == '"':
-                    content_index+=1
-                    while content[content_index] != '"':
-                        tempstr+=content[content_index]
-                        content_index+=1
-                    self.token_list_append('"'+tempstr+'"')
-
-
-                    content_index += 1
-                    tempstr=''
-            
-                elif content[content_index] in self.symbols :
-                    if tempstr != '':
-                        self.token_list_append(tempstr)
-                        tempstr = '' 
                     
-                    self.token_list_append(content[content_index])
-                    content_index +=1
-                    
+                    content_index+=1
+                content_index+=2
 
-                elif content[content_index] in spacing_chars :
-                    if tempstr != '':
-                        self.token_list_append(tempstr)
-                        tempstr = '' 
-                    content_index +=1
+            elif content_index + 1 < len(content) and content[content_index] + content[content_index + 1] == '//':
+                while content[content_index]  != '\n':
+                    content_index+=1
+                content_index+=1
+                self.line_number += 1 
+                self.current_line_token_number = 0 
+        
+            elif content[content_index] == '"':
+                content_index+=1
+                while content[content_index] != '"':
+                    tempstr+=content[content_index]
+                    content_index+=1
+                self.token_list_append('"'+tempstr+'"')
 
-                else:
-                    tempstr+= content[content_index]
-                    content_index +=1
-                pass
+
+                content_index += 1
+                tempstr=''
+        
+            elif content[content_index] in self.symbols :
+                if tempstr != '':
+                    self.token_list_append(tempstr)
+                    tempstr = '' 
                 
-        except:
+                self.token_list_append(content[content_index])
+                content_index +=1
+                
+
+            elif content[content_index] in spacing_chars :
+                if tempstr != '':
+                    self.token_list_append(tempstr)
+                    tempstr = '' 
+                content_index +=1
+
+            else:
+                tempstr+= content[content_index]
+                content_index +=1
             pass
-        self.total_tokens= len(self.token_list)
+        
+        if tempstr:
+            self.token_list_append(tempstr)
+        
+        self.total_tokens = len(self.token_list)
+
+        
 
 
         #print(self.token_list)
-
-    
-    
     
     def tokentypecurrent(self):
         return self.token_list[self.current_token_number][1]
@@ -127,7 +127,9 @@ class tokeniser():
         return self.token_list[self.current_token_number +1][0]
     
     def advance(self):
-        if self.hasMoreTokens():
+
+        if self.hasMoreTokens(): 
+            #print(self.current_token())
             self.current_token_number+=1
             return self.current_token()
     

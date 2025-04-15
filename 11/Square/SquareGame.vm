@@ -1,0 +1,179 @@
+function SquareGame.new 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push constant 0
+push constant 0
+push constant 30
+call Square.new 3
+pop this 0
+push constant 0
+pop this 1
+push pointer 0
+return
+function SquareGame.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function SquareGame.moveSquare 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 1
+eq
+if-goto classSquareGameifLabelExecuteIf0
+goto classSquareGameifLabelExecuteElse0
+label classSquareGameifLabelExecuteIf0
+push this 0
+call Square.moveUp 1
+pop temp 0
+label classSquareGameifLabelExecuteElse0
+push this 1
+push constant 2
+eq
+if-goto classSquareGameifLabelExecuteIf1
+goto classSquareGameifLabelExecuteElse1
+label classSquareGameifLabelExecuteIf1
+push this 0
+call Square.moveDown 1
+pop temp 0
+label classSquareGameifLabelExecuteElse1
+push this 1
+push constant 3
+eq
+if-goto classSquareGameifLabelExecuteIf2
+goto classSquareGameifLabelExecuteElse2
+label classSquareGameifLabelExecuteIf2
+push this 0
+call Square.moveLeft 1
+pop temp 0
+label classSquareGameifLabelExecuteElse2
+push this 1
+push constant 4
+eq
+if-goto classSquareGameifLabelExecuteIf3
+goto classSquareGameifLabelExecuteElse3
+label classSquareGameifLabelExecuteIf3
+push this 0
+call Square.moveRight 1
+pop temp 0
+label classSquareGameifLabelExecuteElse3
+push constant 5
+call Sys.wait 1
+pop temp 0
+push constant 0
+return
+function SquareGame.run 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+label classSquareGamewhileLabelStart1
+push local 1
+not
+not
+if-goto classSquareGamewhileLabelEXIT1
+label classSquareGamewhileLabelStart2
+push local 0
+push constant 0
+eq
+not
+if-goto classSquareGamewhileLabelEXIT2
+call Keyboard.keyPressed 0
+pop local 0
+push pointer 0
+call SquareGame.moveSquare 1
+pop temp 0
+goto classSquareGamewhileLabelStart2
+label classSquareGamewhileLabelEXIT2
+push local 0
+push constant 81
+eq
+if-goto classSquareGameifLabelExecuteIf4
+goto classSquareGameifLabelExecuteElse4
+label classSquareGameifLabelExecuteIf4
+push constant 0
+not
+pop local 1
+label classSquareGameifLabelExecuteElse4
+push local 0
+push constant 90
+eq
+if-goto classSquareGameifLabelExecuteIf5
+goto classSquareGameifLabelExecuteElse5
+label classSquareGameifLabelExecuteIf5
+push this 0
+call Square.decSize 1
+pop temp 0
+label classSquareGameifLabelExecuteElse5
+push local 0
+push constant 88
+eq
+if-goto classSquareGameifLabelExecuteIf6
+goto classSquareGameifLabelExecuteElse6
+label classSquareGameifLabelExecuteIf6
+push this 0
+call Square.incSize 1
+pop temp 0
+label classSquareGameifLabelExecuteElse6
+push local 0
+push constant 131
+eq
+if-goto classSquareGameifLabelExecuteIf7
+goto classSquareGameifLabelExecuteElse7
+label classSquareGameifLabelExecuteIf7
+push constant 1
+pop this 1
+label classSquareGameifLabelExecuteElse7
+push local 0
+push constant 133
+eq
+if-goto classSquareGameifLabelExecuteIf8
+goto classSquareGameifLabelExecuteElse8
+label classSquareGameifLabelExecuteIf8
+push constant 2
+pop this 1
+label classSquareGameifLabelExecuteElse8
+push local 0
+push constant 130
+eq
+if-goto classSquareGameifLabelExecuteIf9
+goto classSquareGameifLabelExecuteElse9
+label classSquareGameifLabelExecuteIf9
+push constant 3
+pop this 1
+label classSquareGameifLabelExecuteElse9
+push local 0
+push constant 132
+eq
+if-goto classSquareGameifLabelExecuteIf10
+goto classSquareGameifLabelExecuteElse10
+label classSquareGameifLabelExecuteIf10
+push constant 4
+pop this 1
+label classSquareGameifLabelExecuteElse10
+label classSquareGamewhileLabelStart3
+push local 0
+push constant 0
+eq
+not
+not
+if-goto classSquareGamewhileLabelEXIT3
+call Keyboard.keyPressed 0
+pop local 0
+push pointer 0
+call SquareGame.moveSquare 1
+pop temp 0
+goto classSquareGamewhileLabelStart3
+label classSquareGamewhileLabelEXIT3
+goto classSquareGamewhileLabelStart1
+label classSquareGamewhileLabelEXIT1
+push constant 0
+return

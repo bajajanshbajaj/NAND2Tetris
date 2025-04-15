@@ -21,17 +21,15 @@ for i in range (len(jack_files)):
     
     if ext_name == '.jack':
         start_time = time.time()
-        jack_file = open(path, 'r')
+        jack_filestream = open(path, 'r')
         logpath= jack_dir+ '/' + filename + '.log'
+        VMpath = jack_dir+ '/' + filename + '.vm'
 
-        cmpl = CompileEngine(jack_file, logpath ) 
-        jack_file.close()
-        #print(cmpl.parsed)
-        xmlpath= jack_dir+ '/' + filename + '.xml'
+        cmpl = CompileEngine(jack_filestream, logpath , VMpath) 
+        jack_filestream.close()
 
-        xmlfile = open (xmlpath, 'w')
-        xmlfile.write(cmpl.parsed)
-        print(f"| Compilation Successful for file: {path} in {round(time.time()-start_time, 5)} seconds |\n| xml file: {xmlpath} | log file: {logpath} |\n")
+        
+        print(f"| Compilation Successful for file: {path} in {round(time.time()-start_time, 5)} seconds |\n| VM file: {VMpath} | log file: {logpath} |\n")
 
 
 sys.exit(0)
