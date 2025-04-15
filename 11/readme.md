@@ -1,3 +1,5 @@
+Project 11: Jack Compiler – VM Code Generator
+
 This directory contains my solution to Project 11 of the Nand2Tetris course, which focuses on extending the Jack compiler to generate VM code from the parsed Jack source code. 
 The project builds on the work done in Project 10 by adding a VM code generation phase, translating the syntax tree into low-level VM instructions.
 
