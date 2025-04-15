@@ -1,3 +1,5 @@
+Project 10: Jack Compiler – Syntax Analyzer
+
 This directory contains Project 10 of the Nand2Tetris course, which focuses on building the syntax analysis phase of the Jack compiler. 
 The goal of this project is to parse Jack source code (.jack files) and produce an XML Tree representation of its grammatical structure.
 
