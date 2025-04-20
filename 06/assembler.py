@@ -7,6 +7,8 @@ any new variables/labels are added to this, done in 2 ways
 '''
 varcount=16
 
+#0 stores sp 1 lcl 2 arg 3 this 4 that  5 to 12 is temp 13 to 15 is internal use, 16 to 255 is static ,256+ is stack  
+
 variable_dict={
     'R0': '0',
     'R1': '1',
